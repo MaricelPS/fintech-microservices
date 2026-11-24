@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.utn.customer_service.dto.ProductDto;
 
 import java.net.URI;
 import java.util.List;
@@ -31,6 +32,11 @@ public class CustomerController {
     @GetMapping("/{id}")
     public CustomerResponse findById(@PathVariable Long id) {
         return customerService.findById(id);
+    }
+
+    @GetMapping("/{id}/products")
+    public List<ProductDto> findProducts(@PathVariable Long id) {
+        return customerService.findProducts(id);
     }
 
     @PostMapping

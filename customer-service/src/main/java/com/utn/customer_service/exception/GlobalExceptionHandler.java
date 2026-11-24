@@ -59,6 +59,12 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.NOT_FOUND, "The requested route does not exist", List.of());
     }
 
+    // 503: the remote service failed or is unreachable
+    @ExceptionHandler(ProductServiceException.class)
+    public ResponseEntity<ErrorResponse> handleProductService(ProductServiceException ex) {
+        return build(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage(), List.of());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpected(Exception ex) {
         log.error("Unhandled error", ex);

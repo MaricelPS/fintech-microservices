@@ -1,28 +1,41 @@
 package com.utn.customer_service.service;
 
+import com.utn.customer_service.client.ProductClient;
 import com.utn.customer_service.dto.CustomerCreateRequest;
 import com.utn.customer_service.dto.CustomerResponse;
 import com.utn.customer_service.dto.CustomerUpdateRequest;
+import com.utn.customer_service.dto.ProductDto;
 import com.utn.customer_service.exception.CustomerNotFoundException;
 import com.utn.customer_service.exception.DuplicateResourceException;
+import com.utn.customer_service.exception.ProductServiceException;
 import com.utn.customer_service.mapper.CustomerMapper;
 import com.utn.customer_service.model.Customer;
 import com.utn.customer_service.repository.CustomerRepository;
+import feign.FeignException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-    private final CustomerRepository customerRepository;
+    private static final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    private final CustomerRepository customerRepository;
+    private final ProductClient productClient;
+
+    public CustomerServiceImpl(CustomerRepository customerRepository,
+                               ProductClient productClient) {
         this.customerRepository = customerRepository;
+        this.productClient = productClient;
     }
 
     @Override
@@ -87,13 +100,24 @@ public class CustomerServiceImpl implements CustomerService {
         return CustomerMapper.toResponse(customerRepository.save(customer));
     }
 
+    @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public List<ProductDto> findProducts(Long id) {
+        getCustomer(id); // throws 404 if the customer does not exist: no remote call is made
+
+        try {
+            return productClient.findByCustomerId(id);
+        } catch (FeignException e) {
+            log.error("Error calling product-service for customer {}", id, e);
+            throw new ProductServiceException(id, e);
+        }
+    }
     // ---------- Helpers ----------
 
     private Customer getCustomer(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
     }
-
     private Customer save(Customer customer) {
         try {
             return customerRepository.saveAndFlush(customer);
