@@ -17,3 +17,11 @@ spring:
           product-service:
             connect-timeout: 2000
             read-timeout: 5000
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET}
+      expiration-minutes: 60
+    admin-password: ${ADMIN_PASSWORD}
+    user-password: ${USER_PASSWORD}
