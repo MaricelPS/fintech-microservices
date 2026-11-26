@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -74,5 +75,10 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String message, List<String> details) {
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(status.value(), message, details, LocalDateTime.now()));
+    }
+    // 401: wrong username or password on login
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthentication(AuthenticationException ex) {
+        return build(HttpStatus.UNAUTHORIZED, "Invalid username or password", List.of());
     }
 }
