@@ -1,0 +1,925 @@
+{
+  "info": {
+    "_postman_id": "162d64c4-bcfc-464a-93d3-54b83bfbf776",
+    "name": "Fintech Microservices",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01. Login admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 200) {\r\n    pm.collectionVariables.set(\"adminToken\", pm.response.json().accessToken);\r\n}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"username\": \"admin\", \"password\": \"{{adminPassword}}\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/auth/login",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02. Login user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.response.code === 200) {\r\n    pm.collectionVariables.set(\"userToken\", pm.response.json().accessToken);\r\n}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"username\": \"user\", \"password\": \"{{userPassword}}\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/auth/login",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03. Create account",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"number\": \"AC-0001\", \"type\": \"ACCOUNT\", \"customerId\": 1, \"currency\": \"ARS\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{productUrl}}/products",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04. Create card",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"number\": \"CC-0001\", \"type\": \"CARD\", \"customerId\": 1, \"creditLimit\": 500000 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{productUrl}}/products",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05. Create loan",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"number\": \"LN-0001\", \"type\": \"LOAN\", \"customerId\": 1, \"amount\": 1000000, \"installments\": 12, \"annualRate\": 60 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{productUrl}}/products",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06. Create investment",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"number\": \"IN-0001\", \"type\": \"INVESTMENT\", \"customerId\": 2, \"amount\": 500000, \"termDays\": 30, \"annualRate\": 36 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{productUrl}}/products",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07. Products of customer 1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{productUrl}}/products/customer/1",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products",
+            "customer",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08. Error: incomplete loan -> 400",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"number\": \"LN-0002\", \"type\": \"LOAN\", \"customerId\": 1, \"amount\": 50000 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{productUrl}}/products",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09. Error: invalid type -> 400",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"number\": \"XX-0001\", \"type\": \"BITCOIN\", \"customerId\": 1 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{productUrl}}/products",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10. Error: duplicate -> 409",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"number\": \"AC-0001\", \"type\": \"ACCOUNT\", \"customerId\": 1, \"currency\": \"ARS\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{productUrl}}/products",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11. Error: not found -> 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{productUrl}}/products/99",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products",
+            "99"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "12. Customer without products",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{productUrl}}/products/customer/99",
+          "host": [
+            "{{productUrl}}"
+          ],
+          "path": [
+            "products",
+            "customer",
+            "99"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "13. Create customer 1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Ana Gomez\", \"documentNumber\": \"30123456\", \"email\": \"ana@mail.com\", \"initialBalance\": 100000 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "14. Create customer 2",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Luis Perez\", \"documentNumber\": \"28999888\", \"email\": \"luis@mail.com\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "15. List customers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "16. Find customer",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers/1",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "17. Update customer",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Ana M. Gomez\", \"email\": \"ana@mail.com\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers/1",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "18. Deposit",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"amount\": 50000 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers/1/deposit",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "1",
+            "deposit"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "19. Withdraw",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"amount\": 30000 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers/1/withdraw",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "1",
+            "withdraw"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "20. Error: insufficient balance -> 422",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"amount\": 1000 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers/2/withdraw",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "2",
+            "withdraw"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "21. Error: duplicate email -> 409",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Ana Lopez\",\r\n  \"documentNumber\": \"33444555\",\r\n  \"email\": \"ana@mail.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "22. Error: invalid data -> 400",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"\", \"documentNumber\": \"12\", \"email\": \"bad\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "23. Error: not found -> 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers/99",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "99"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "24. Products of customer 1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers/1/products",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "1",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "25. Products of customer 2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers/2/products",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "2",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "26. Error: customer not found -> 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers/99/products",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "99",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "27. Error: product-service down -> 503 (stop product-service first)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers/1/products",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "1",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "28. Error: wrong password -> 401",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"username\": \"admin\", \"password\": \"wrong\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/auth/login",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "29. Error: no token -> 401",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "30. List customers as USER -> 200",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "31. Customer products as USER -> 200",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers/1/products",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "1",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "32. Error: USER creates customer -> 403",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Test User\", \"documentNumber\": \"40111222\", \"email\": \"test@mail.com\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "33. Create customer as ADMIN -> 201",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Carla Diaz\", \"documentNumber\": \"35666777\", \"email\": \"carla@mail.com\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "34. Error: tampered token -> 401",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}x",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "35. Products of customer 1 (via Feign)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{customerUrl}}/customers/1/products",
+          "host": [
+            "{{customerUrl}}"
+          ],
+          "path": [
+            "customers",
+            "1",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{adminToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "productUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "customerUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "adminPassword",
+      "value": ""
+    },
+    {
+      "key": "userPassword",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "secret": true,
+      "value": ""
+    },
+    {
+      "key": "userToken",
+      "secret": true,
+      "value": ""
+    }
+  ]
+}
